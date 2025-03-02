@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.tlias_web_management.mapper.EmpMapper">
+    <!-- resultType: 查询返回的单条记录的类型 -->
+
+    <!-- list -->
+    <select id="list" resultType="com.example.tlias_web_management.pojo.Emp">        
+        select e.*, d.name deptName from emp e left join dept d on e.dept_id = d.id
+        <where>
+            <if test="name != null and name != ''">
+                e.name like concat('%', #{name}, '%')
+            </if>
+            <if test="gender != null">
+                and e.gender = #{gender}
+            </if>
+            <if test="begin != null and end != null">
+                and e.entry_date between #{begin} and #{end}
+            </if>
+        </where>
+        order by e.update_time desc
+    </select>
+
+    <!-- countEmpJobData --> 
+    <select id="countEmpJobData" resultType="java.util.Map">
+        select
+            (case job 
+                when 1 then '班主任' 
+                when 2 then '讲师' 
+                when 3 then '学工主管' 
+                when 4 then '教研主管' 
+                when 5 then '咨询师' 
+                else '其他'
+            end) job,
+            count(*) total
+        from emp group by job order by total
+    </select>
+
+    <!-- deleteByIds --> 
+    <delete id="deleteByIds">
+        delete from emp where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- getById --> 
+    <select id="getById" resultType="com.example.tlias_web_management.pojo.Emp">
+        select e.* from emp e where e.id = #{id}
+    </select>
+
+    <!-- updateById -->
+    <update id="updateById">
+        update emp
+        <set>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- countEmpGenderData --> 
+    <select id="countEmpGenderData" resultType="java.util.Map">
+        select 
+            if (gender = 1, '男', '女') name,
+            count(*) value
+        from emp group by gender
+    </select>
+    
+</mapper>

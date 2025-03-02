@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出: 
+            %d: 表示日期
+            %thread: 表示线程名
+            %-5level: level 是日志级别, -5 表示级别从左显示 5 个字符宽度以对齐
+            %logger{50}: 传递的 Logger 对象, 50 是限制长度
+            %msg: 日志消息
+            %n: 换行符
+            -->
+            <charset>GBK</charset>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%thread] %-5(%highlight(%level)) %yellow(%logger{50}) - %cyan(%msg) %n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 系统文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 日志文件输出的文件名, %i 表示序号 -->
+            <FileNamePattern>D:/tlias-web-management/src/main/resources/log/tlias-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <!-- 最多保留的历史日志文件数量 -->
+            <MaxHistory>30</MaxHistory>
+            <!-- 最大文件大小, 超过这个大小会触发滚动到新文件, 默认为 10 MB -->
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出: 
+            %d: 表示日期
+            %thread: 表示线程名
+            %-5level: level 是日志级别, -5 表示级别从左显示 5 个字符宽度以对齐
+            %logger{50}: 传递的 Logger 对象, 50 是限制长度
+            %msg: 日志消息
+            %n: 换行符
+            -->
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
